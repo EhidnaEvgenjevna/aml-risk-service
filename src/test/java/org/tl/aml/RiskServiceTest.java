@@ -11,7 +11,7 @@ class RiskServiceTest {
 
     private final RiskService riskService = new RiskService();
 
-    private static Customer customer(String currentAccountBalance) {
+    private static Customer createNewCustomer(String currentAccountBalance) {
         return new Customer("c-1", "John", "Smith", new BigDecimal(currentAccountBalance));
     }
 
@@ -19,7 +19,7 @@ class RiskServiceTest {
     @DisplayName("Small exposure is LOW")
     void classifySmallExposureAsLow() {
         // given
-        Customer customer = customer("500");
+        Customer customer = createNewCustomer("500");
 
         // when
         RiskClass result = riskService.classify(customer);
@@ -29,16 +29,19 @@ class RiskServiceTest {
     }
 
     @Test
-    @Disabled("TODO")
     @DisplayName("Medium exposure is MEDIUM")
     void classifyMediumExposureAsMedium() {
-        // TODO: customer with 25000 -> MEDIUM
+        Customer customer = createNewCustomer("25000");
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.MEDIUM, result);
     }
 
     @Test
-    @Disabled("TODO")
     @DisplayName("Large exposure is HIGH")
     void classifyLargeExposureAsHigh() {
+        Customer customer = createNewCustomer("120000");
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
         // TODO: customer with 120000 -> HIGH
     }
 
@@ -57,10 +60,12 @@ class RiskServiceTest {
     }
 
     @Test
-    @Disabled("TODO")
     @DisplayName("Assess stores the risk class on the customer")
     void assessStoresRiskClass() {
-        // TODO: after assess(), customer with 120000 has risk class HIGH
+        Customer customer = createNewCustomer("130000");
+        riskService.assess(customer);
+        assertEquals(RiskClass.HIGH, customer.getRiskClass());
+
     }
 
     @Test
