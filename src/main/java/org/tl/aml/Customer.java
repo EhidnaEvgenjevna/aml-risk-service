@@ -12,6 +12,7 @@ public class Customer {
     private String firstName;
     private String lastName;
     private BigDecimal currentAccountBalance;
+    private BigDecimal depositBalance;
 
     // TODO (task 1): add depositBalance field
 
@@ -26,14 +27,19 @@ public class Customer {
         this.lastName = lastName;
         this.currentAccountBalance = currentAccountBalance;
         this.riskClass = RiskClass.UNDEFINED;
+        this.depositBalance = BigDecimal.ZERO;
     }
 
+    public void addDeposit(BigDecimal moneyForDeposit) {
+        depositBalance = depositBalance.add(moneyForDeposit);
+    }
     /**
      * Total amount the bank is exposed to by this customer.
      *
      * TODO (task 1): include depositBalance, total = currentAccountBalance + depositBalance.
      */
     public BigDecimal getTotalMonetaryExposure() {
-        return currentAccountBalance;
+        BigDecimal totalMoney = currentAccountBalance.add(depositBalance);
+        return totalMoney;
     }
 }
