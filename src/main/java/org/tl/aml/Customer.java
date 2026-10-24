@@ -13,6 +13,7 @@ public class Customer {
     private String lastName;
     private BigDecimal currentAccountBalance;
     private BigDecimal depositBalance;
+    private Residency residency;
 
     // TODO (task 1): add depositBalance field
 
@@ -28,6 +29,7 @@ public class Customer {
         this.currentAccountBalance = currentAccountBalance;
         this.riskClass = RiskClass.UNDEFINED;
         this.depositBalance = BigDecimal.ZERO;
+        this.residency = Residency.UNDEFINED;
     }
 
     public void addDeposit(BigDecimal moneyForDeposit) {
