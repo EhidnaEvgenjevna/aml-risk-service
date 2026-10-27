@@ -29,9 +29,34 @@ class RiskServiceTest {
     }
 
     @Test
+    @DisplayName("Small exposure with deposit is LOW")
+    void classifySmallExposureWithDepositAsLow() {
+        // given
+        Customer customer = createNewCustomer("5000");
+        customer.addDeposit(new BigDecimal("4999"));
+
+        // when
+        RiskClass result = riskService.classify(customer);
+
+        // then
+        assertEquals(RiskClass.LOW, result);
+    }
+
+    // доделать тесты для медиум и хай сделать коммит и пуш и поискать как сделать настройки репозитория не приватного а
+    // публичного и прислать ссылку на репозиторий
+    @Test
     @DisplayName("Medium exposure is MEDIUM")
     void classifyMediumExposureAsMedium() {
         Customer customer = createNewCustomer("25000");
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.MEDIUM, result);
+    }
+
+    @Test
+    @DisplayName("Medium exposure with deposit is MEDIUM")
+    void classifyMediumExposureWithDepositAsMedium() {
+        Customer customer = createNewCustomer("45000");
+        customer.addDeposit(new BigDecimal("4999"));
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.MEDIUM, result);
     }
@@ -42,20 +67,32 @@ class RiskServiceTest {
         Customer customer = createNewCustomer("120000");
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
-        // TODO: customer with 120000 -> HIGH
     }
 
     @Test
-    @Disabled("TODO")
+    @DisplayName("Large exposure with deposit is HIGH")
+    void classifyLargeExposureWithDepositAsHugh() {
+        Customer customer = createNewCustomer("55000");
+        customer.addDeposit(new BigDecimal("4999"));
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
+    }
+
+    @Test
     @DisplayName("Exposure exactly at the MEDIUM threshold is MEDIUM")
     void classifyExposureAtMediumThresholdAsMedium() {
+        Customer customer = createNewCustomer("10000");
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.MEDIUM, result);
         // TODO: customer with 10000 -> MEDIUM
     }
 
     @Test
-    @Disabled("TODO")
     @DisplayName("Exposure exactly at the HIGH threshold is HIGH")
     void classifyExposureAtHighThresholdAsHigh() {
+        Customer customer = createNewCustomer("50000");
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
         // TODO: customer with 50000 -> HIGH
     }
 
@@ -65,21 +102,24 @@ class RiskServiceTest {
         Customer customer = createNewCustomer("130000");
         riskService.assess(customer);
         assertEquals(RiskClass.HIGH, customer.getRiskClass());
-
     }
 
     @Test
-    @Disabled("TODO")
     @DisplayName("Classify does not change the customer")
     void classifyDoesNotChangeCustomer() {
-        // TODO: after classify(), customer still has risk class UNDEFINED
+        Customer customer = createNewCustomer("130000");
+        assertEquals(RiskClass.UNDEFINED, customer.getRiskClass());
+        riskService.classify(customer);
+        assertEquals(RiskClass.UNDEFINED, customer.getRiskClass());
     }
 
     @Test
-    @Disabled("TODO (task 1)")
     @DisplayName("Classify uses current account plus deposits")
     void classifyUsesTotalExposureWithDeposits() {
-        // TODO: current account 30000 + deposits 25000 -> HIGH
+        Customer customer = createNewCustomer("30000");
+        customer.addDeposit(new BigDecimal("25000"));
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
     }
 
     @Test
