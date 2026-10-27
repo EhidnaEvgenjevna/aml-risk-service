@@ -22,14 +22,14 @@ public class Customer {
     /** Risk class assigned by the last assessment, UNDEFINED until the customer is assessed. */
     private RiskClass riskClass;
 
-    public Customer(String id, String firstName, String lastName, BigDecimal currentAccountBalance) {
+    public Customer(String id, String firstName, String lastName, BigDecimal currentAccountBalance, Residency residency) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.currentAccountBalance = currentAccountBalance;
         this.riskClass = RiskClass.UNDEFINED;
         this.depositBalance = BigDecimal.ZERO;
-        this.residency = Residency.UNDEFINED;
+        this.residency = residency;
     }
 
     public void addDeposit(BigDecimal moneyForDeposit) {

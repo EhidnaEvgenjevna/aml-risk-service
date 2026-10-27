@@ -12,7 +12,7 @@ class RiskServiceTest {
     private final RiskService riskService = new RiskService();
 
     private static Customer createNewCustomer(String currentAccountBalance) {
-        return new Customer("c-1", "John", "Smith", new BigDecimal(currentAccountBalance));
+        return new Customer("c-1", "John", "Smith", new BigDecimal(currentAccountBalance), Residency.EU);
     }
 
     @Test
