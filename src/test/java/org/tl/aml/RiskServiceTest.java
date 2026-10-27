@@ -42,7 +42,8 @@ class RiskServiceTest {
         assertEquals(RiskClass.LOW, result);
     }
 
-    // доделать тесты для медиум и хай сделать коммит и пуш и поискать как сделать настройки репозитория не приватного а публичного и прислать ссылку на репозиторий
+    // доделать тесты для медиум и хай сделать коммит и пуш и поискать как сделать настройки репозитория не приватного а
+    // публичного и прислать ссылку на репозиторий
     @Test
     @DisplayName("Medium exposure is MEDIUM")
     void classifyMediumExposureAsMedium() {
@@ -50,6 +51,7 @@ class RiskServiceTest {
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.MEDIUM, result);
     }
+
     @Test
     @DisplayName("Medium exposure with deposit is MEDIUM")
     void classifyMediumExposureWithDepositAsMedium() {
@@ -58,7 +60,6 @@ class RiskServiceTest {
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.MEDIUM, result);
     }
-
 
     @Test
     @DisplayName("Large exposure is HIGH")
@@ -101,7 +102,6 @@ class RiskServiceTest {
         Customer customer = createNewCustomer("130000");
         riskService.assess(customer);
         assertEquals(RiskClass.HIGH, customer.getRiskClass());
-
     }
 
     @Test
