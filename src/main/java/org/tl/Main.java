@@ -14,7 +14,7 @@ public class Main {
         List<Customer> customers = List.of(
                 new Customer("c-1", "John", "Smith", new BigDecimal("500"), Residency.EU),
                 new Customer("c-2", "Anna", "Tamm", new BigDecimal("25000"), Residency.US),
-                new Customer("c-3", "Mark", "Kask", new BigDecimal("120000"),Residency.NON_EU));
+                new Customer("c-3", "Mark", "Kask", new BigDecimal("120000"), Residency.NON_EU));
 
         for (Customer customer : customers) {
             RiskClass before = customer.getRiskClass();

@@ -22,7 +22,8 @@ public class Customer {
     /** Risk class assigned by the last assessment, UNDEFINED until the customer is assessed. */
     private RiskClass riskClass;
 
-    public Customer(String id, String firstName, String lastName, BigDecimal currentAccountBalance, Residency residency) {
+    public Customer(
+            String id, String firstName, String lastName, BigDecimal currentAccountBalance, Residency residency) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

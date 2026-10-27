@@ -22,7 +22,7 @@ class CustomerTest {
     @DisplayName("New customer has UNDEFINED risk class")
     void newCustomerHasUndefinedRiskClass() {
         // given
-        Customer customer = new Customer("c-1", "John", "Smith", new BigDecimal("1500.50"),Residency.EU);
+        Customer customer = new Customer("c-1", "John", "Smith", new BigDecimal("1500.50"), Residency.EU);
 
         // when
         RiskClass riskClass = customer.getRiskClass();
