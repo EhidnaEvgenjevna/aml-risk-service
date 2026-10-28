@@ -36,13 +36,17 @@ public class Customer {
     public void addDeposit(BigDecimal moneyForDeposit) {
         depositBalance = depositBalance.add(moneyForDeposit);
     }
-    /**
-     * Total amount the bank is exposed to by this customer.
-     *
-     * TODO (task 1): include depositBalance, total = currentAccountBalance + depositBalance.
-     */
+
     public BigDecimal getTotalMonetaryExposure() {
         BigDecimal totalMoney = currentAccountBalance.add(depositBalance);
         return totalMoney;
+    }
+
+    public static Customer createCustomerWithNotResidencyEU(
+            String id, String firstName, String lastName, BigDecimal currentAccountBalance, Residency residency) {
+        if (residency == Residency.EU) {
+            throw new IllegalArgumentException("Residency not EU");
+        }
+        return new Customer(id, firstName, lastName, currentAccountBalance, residency);
     }
 }
