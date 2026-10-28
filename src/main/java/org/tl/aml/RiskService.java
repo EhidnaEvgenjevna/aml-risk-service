@@ -22,6 +22,10 @@ public class RiskService {
 
         BigDecimal exposure = customer.getTotalMonetaryExposure();
 
+        if (customer.getResidency() != Residency.EU) {
+            return RiskClass.HIGH;
+        }
+
         if (exposure.compareTo(MEDIUM_THRESHOLD) < 0) {
             return RiskClass.LOW;
         }

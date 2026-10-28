@@ -11,15 +11,16 @@ class RiskServiceTest {
 
     private final RiskService riskService = new RiskService();
 
-    private static Customer createNewCustomer(String currentAccountBalance) {
-        return new Customer("c-1", "John", "Smith", new BigDecimal(currentAccountBalance));
+    private static Customer createNewEUCustomer(String currentAccountBalance) {
+        return new Customer("c-1", "John", "Smith", new BigDecimal(currentAccountBalance), Residency.EU);
     }
-
+    // написать метод который создает не ЕУ кастомера и дописать тесты для проверки новой логики где если не ЕУ то в
+    // независимости от денег он всегда с высоким риском
     @Test
     @DisplayName("Small exposure is LOW")
     void classifySmallExposureAsLow() {
         // given
-        Customer customer = createNewCustomer("500");
+        Customer customer = createNewEUCustomer("500");
 
         // when
         RiskClass result = riskService.classify(customer);
@@ -32,7 +33,7 @@ class RiskServiceTest {
     @DisplayName("Small exposure with deposit is LOW")
     void classifySmallExposureWithDepositAsLow() {
         // given
-        Customer customer = createNewCustomer("5000");
+        Customer customer = createNewEUCustomer("5000");
         customer.addDeposit(new BigDecimal("4999"));
 
         // when
@@ -42,12 +43,10 @@ class RiskServiceTest {
         assertEquals(RiskClass.LOW, result);
     }
 
-    // доделать тесты для медиум и хай сделать коммит и пуш и поискать как сделать настройки репозитория не приватного а
-    // публичного и прислать ссылку на репозиторий
     @Test
     @DisplayName("Medium exposure is MEDIUM")
     void classifyMediumExposureAsMedium() {
-        Customer customer = createNewCustomer("25000");
+        Customer customer = createNewEUCustomer("25000");
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.MEDIUM, result);
     }
@@ -55,7 +54,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Medium exposure with deposit is MEDIUM")
     void classifyMediumExposureWithDepositAsMedium() {
-        Customer customer = createNewCustomer("45000");
+        Customer customer = createNewEUCustomer("45000");
         customer.addDeposit(new BigDecimal("4999"));
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.MEDIUM, result);
@@ -64,7 +63,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Large exposure is HIGH")
     void classifyLargeExposureAsHigh() {
-        Customer customer = createNewCustomer("120000");
+        Customer customer = createNewEUCustomer("120000");
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
     }
@@ -72,8 +71,35 @@ class RiskServiceTest {
     @Test
     @DisplayName("Large exposure with deposit is HIGH")
     void classifyLargeExposureWithDepositAsHugh() {
-        Customer customer = createNewCustomer("55000");
+        Customer customer = createNewEUCustomer("55000");
         customer.addDeposit(new BigDecimal("4999"));
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
+    }
+
+    @Test
+    @DisplayName("RiskClass is always HIGH")
+    void riskClassIsAlwaysHighWhenResidencyNON_EU() {
+        Customer customer =
+                Customer.createCustomerWithNotResidencyEU("c-1", "John", "Smith", BigDecimal.ZERO, Residency.NON_EU);
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
+    }
+
+    @Test
+    @DisplayName("RiskClass is always HIGH")
+    void riskClassIsAlwaysHighWhenResidencyUS() {
+        Customer customer =
+                Customer.createCustomerWithNotResidencyEU("c-1", "John", "Smith", BigDecimal.ZERO, Residency.US);
+        RiskClass result = riskService.classify(customer);
+        assertEquals(RiskClass.HIGH, result);
+    }
+
+    @Test
+    @DisplayName("RiskClass is always HIGH")
+    void riskClassIsAlwaysHighWhenResidencyUNDEFINED() {
+        Customer customer =
+                Customer.createCustomerWithNotResidencyEU("c-1", "John", "Smith", BigDecimal.ZERO, Residency.UNDEFINED);
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
     }
@@ -81,7 +107,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Exposure exactly at the MEDIUM threshold is MEDIUM")
     void classifyExposureAtMediumThresholdAsMedium() {
-        Customer customer = createNewCustomer("10000");
+        Customer customer = createNewEUCustomer("10000");
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.MEDIUM, result);
         // TODO: customer with 10000 -> MEDIUM
@@ -90,7 +116,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Exposure exactly at the HIGH threshold is HIGH")
     void classifyExposureAtHighThresholdAsHigh() {
-        Customer customer = createNewCustomer("50000");
+        Customer customer = createNewEUCustomer("50000");
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
         // TODO: customer with 50000 -> HIGH
@@ -99,7 +125,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Assess stores the risk class on the customer")
     void assessStoresRiskClass() {
-        Customer customer = createNewCustomer("130000");
+        Customer customer = createNewEUCustomer("130000");
         riskService.assess(customer);
         assertEquals(RiskClass.HIGH, customer.getRiskClass());
     }
@@ -107,7 +133,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Classify does not change the customer")
     void classifyDoesNotChangeCustomer() {
-        Customer customer = createNewCustomer("130000");
+        Customer customer = createNewEUCustomer("130000");
         assertEquals(RiskClass.UNDEFINED, customer.getRiskClass());
         riskService.classify(customer);
         assertEquals(RiskClass.UNDEFINED, customer.getRiskClass());
@@ -116,7 +142,7 @@ class RiskServiceTest {
     @Test
     @DisplayName("Classify uses current account plus deposits")
     void classifyUsesTotalExposureWithDeposits() {
-        Customer customer = createNewCustomer("30000");
+        Customer customer = createNewEUCustomer("30000");
         customer.addDeposit(new BigDecimal("25000"));
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
