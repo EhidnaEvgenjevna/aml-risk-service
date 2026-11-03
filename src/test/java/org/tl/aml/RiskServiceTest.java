@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 class RiskServiceTest {
 
@@ -86,6 +88,17 @@ class RiskServiceTest {
         assertEquals(RiskClass.HIGH, result);
     }
 
+    @ParameterizedTest(name = "RiskClass is HIGH when residency is {0}")
+    @EnumSource(value = Residency.class, names = "EU", mode = EnumSource.Mode.EXCLUDE)
+    void riskClassIsAlwaysHighWhenNotEuResidency(Residency residency) {
+        Customer customer = Customer.createCustomerWithNotResidencyEU(
+                "c-1", "John", "Smith", BigDecimal.ZERO, residency);
+
+        RiskClass result = riskService.classify(customer);
+
+        assertEquals(RiskClass.HIGH, result);
+    }
+
     @Test
     @DisplayName("RiskClass is always HIGH")
     void riskClassIsAlwaysHighWhenResidencyUS() {
@@ -102,7 +115,7 @@ class RiskServiceTest {
                 Customer.createCustomerWithNotResidencyEU("c-1", "John", "Smith", BigDecimal.ZERO, Residency.UNDEFINED);
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
-    }
+    } // сделать снова чтобы был один тест и он был  @Test > @ParameterizedTest @EnumSource и сделать отдельный pullrequest на эти изменения
 
     @Test
     @DisplayName("Exposure exactly at the MEDIUM threshold is MEDIUM")
