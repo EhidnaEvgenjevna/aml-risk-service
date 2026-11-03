@@ -91,8 +91,8 @@ class RiskServiceTest {
     @ParameterizedTest(name = "RiskClass is HIGH when residency is {0}")
     @EnumSource(value = Residency.class, names = "EU", mode = EnumSource.Mode.EXCLUDE)
     void riskClassIsAlwaysHighWhenNotEuResidency(Residency residency) {
-        Customer customer = Customer.createCustomerWithNotResidencyEU(
-                "c-1", "John", "Smith", BigDecimal.ZERO, residency);
+        Customer customer =
+                Customer.createCustomerWithNotResidencyEU("c-1", "John", "Smith", BigDecimal.ZERO, residency);
 
         RiskClass result = riskService.classify(customer);
 
@@ -115,7 +115,8 @@ class RiskServiceTest {
                 Customer.createCustomerWithNotResidencyEU("c-1", "John", "Smith", BigDecimal.ZERO, Residency.UNDEFINED);
         RiskClass result = riskService.classify(customer);
         assertEquals(RiskClass.HIGH, result);
-    } // сделать снова чтобы был один тест и он был  @Test > @ParameterizedTest @EnumSource и сделать отдельный pullrequest на эти изменения
+    } // сделать снова чтобы был один тест и он был  @Test > @ParameterizedTest @EnumSource и сделать отдельный
+    // pullrequest на эти изменения
 
     @Test
     @DisplayName("Exposure exactly at the MEDIUM threshold is MEDIUM")
